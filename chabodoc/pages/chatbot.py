@@ -195,13 +195,15 @@ def app():
     if st.session_state["finished_chat"]:
         form_placeholder.empty()
         st.markdown("**Wenn du erneut chatten möchtest, lade bitte den Tab neu.**")
-        if isinstance(os.environ["ACC_TOKEN"]):
+        try:
             with open("testfile.txt", "wb") as file:
                 file.writelines(st.session_state["conversation"])
                 file.writelines([i for i in zip(st.session_state["tag"],st.session_state["sicher"])])
             with open("testfile.txt", "rb") as file:
                 dbx = dropbox.Dropbox(os.environ["ACC_TOKEN"])
                 dbx.files_upload(file.read(), "/testfile.txt")
+        except:
+            print("Variable nicht gesetzt")
 
     with col1:
         for entry in st.session_state["conversation"]:
