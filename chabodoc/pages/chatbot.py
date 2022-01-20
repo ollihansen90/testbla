@@ -37,8 +37,6 @@ def download_punkt():
 
 @st.cache(suppress_st_warning=True)
 def load_data_from_json():
-    with open("app/chabodoc/hier.txt", "w", encoding="utf-8") as file:
-        file.write("HIER!!")
     # st.write("Loading data from json")
     with open("app/chabodoc/intents.json", encoding="utf-8") as file:
         data = json.load(file)
@@ -115,6 +113,19 @@ def predict(STEMMER, message, model, words, labels, data, device):
 
 def app():
     print(os.getcwd())
+    
+    try:
+        with open("hier.txt", "w", encoding="utf-8") as file:
+            file.write("HIER!!")
+        print("jo")
+    try:
+        with open("app/hier.txt", "w", encoding="utf-8") as file:
+            file.write("HIER!!")
+        print("ja")
+    
+    with open("/app/hier.txt", "w", encoding="utf-8") as file:
+        file.write("HIER!!")
+        
     st.markdown("## 2. ChatBot")
 
     st.markdown("""Hier kannst du mit **Melinda** chatten.""")
