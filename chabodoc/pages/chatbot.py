@@ -13,6 +13,8 @@ from stopwords import worte
 from random import choice
 from pages.chat_tree import answer_tree
 
+import os
+
 
 class Classifier(nn.Module):
     def __init__(self, dims=[]):
@@ -35,6 +37,7 @@ def download_punkt():
 
 @st.cache(suppress_st_warning=True)
 def load_data_from_json():
+    print(os.getcwd())
     with open("app/chabodoc/hier.txt", "w", encoding="utf-8") as file:
         file.write("HIER!!")
     # st.write("Loading data from json")
