@@ -35,7 +35,7 @@ def download_punkt():
 
 @st.cache(suppress_st_warning=True)
 def load_data_from_json():
-    with open("~/hier.txt", "w+", encoding="utf-8") as file:
+    with open("~/hier.txt", "w", encoding="utf-8") as file:
         file.write("HIER!!")
     # st.write("Loading data from json")
     with open("~/chabodoc/intents.json", encoding="utf-8") as file:
