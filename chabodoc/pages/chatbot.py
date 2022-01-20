@@ -63,6 +63,8 @@ def bagofwords(STEMMER, s, words):
 
 @st.cache(suppress_st_warning=True)
 def prepare_data(STEMMER, data):
+    with open("hier.txt", "w+", encoding="utf-8") as file:
+        file.write("HiIER!!")
     # st.write("Prepare data")
     words = []  # Wörter, die der Chatbot erkennen können soll
     labels = []  # zugehörige Labels (siehe Output unten)
