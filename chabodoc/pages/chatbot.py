@@ -38,7 +38,7 @@ def download_punkt():
 @st.cache(suppress_st_warning=True)
 def load_data_from_json():
     # st.write("Loading data from json")
-    with open("app/chabodoc/intents.json", encoding="utf-8") as file:
+    with open("/app/chabodoc/intents.json", encoding="utf-8") as file:
         data = json.load(file)
     return data
 
@@ -147,7 +147,7 @@ def app():
         dims = [507, 253, 14]
         st.session_state["chatbot_model_trained"] = Classifier(dims).to(device)
         st.session_state["chatbot_model_trained"].load_state_dict(
-            torch.load("app/chabodoc/chatbot_model_trained.pth")
+            torch.load("/app/chabodoc/chatbot_model_trained.pth")
         )
 
     st.session_state["chatbot_model_trained"].eval()
