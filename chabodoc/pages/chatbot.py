@@ -118,10 +118,14 @@ def app():
         with open("hier.txt", "w", encoding="utf-8") as file:
             file.write("HIER!!")
         print("jo")
+    except:
+        print("nope1")
     try:
         with open("app/hier.txt", "w", encoding="utf-8") as file:
             file.write("HIER!!")
         print("ja")
+    except:
+        print("nope2")
     
     with open("/app/hier.txt", "w", encoding="utf-8") as file:
         file.write("HIER!!")
