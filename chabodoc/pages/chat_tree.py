@@ -1,4 +1,5 @@
 from numpy import *
+import random
 
 
 def get_response_tree_1(tree_id, case, tag):
@@ -74,10 +75,10 @@ def get_response_tree_3(tree_id, case, tag, prediction):
     # tree 3
     if case == 1:
         if tag == "bad words":
-            response = "Achso, also nur online Kurse. Wie war denn das Online Learning für dich letztes Semester?"
+            response = "Achso, also nur online Kurse. Wie war denn das Online-Learning für dich letztes Semester?"
             case = 6
         else:
-            response = "Dann hast du bestimmt trotzdem Online-Uni gehabt. Wie war denn das Online Learning für dich letztes Semester?"
+            response = "Dann hast du bestimmt trotzdem Online-Uni gehabt. Wie war denn das Online-Learning für dich letztes Semester?"
             case = 2
 
     elif case == 2:
@@ -153,11 +154,11 @@ def get_response_tree_5(tree_id, case, tag):
 
     elif case == 2 or case == 3:
         if case == 2 and tag == "good words":
-            response = "Das freut mich zu hören! Wie war denn die allgemeine Organissation von deinem Studium: Warst du letztes Semester gut informiert, was du tun musstest?"
+            response = "Das freut mich zu hören! Wie war denn die allgemeine Organisation von deinem Studium: Warst du letztes Semester gut informiert, was du tun musstest?"
         elif case == 3 and tag == "good words":
-            response = "Okay, danke für die Antwort! Wie war denn die allgemeine Organissation von deinem Studium: Warst du letztes Semester gut informiert, was du tun musstest?"
+            response = "Okay, danke für die Antwort! Wie war denn die allgemeine Organisation von deinem Studium: Warst du letztes Semester gut informiert, was du tun musstest?"
         else:
-            response = "Okay, das leite ich mal weiter. Wie war denn die allgemeine Organissation von deinem Studium: Warst du letztes Semester gut informiert, was du tun musstest?"
+            response = "Okay, das leite ich mal weiter. Wie war denn die allgemeine Organisation von deinem Studium: Warst du letztes Semester gut informiert, was du tun musstest?"
         case = 0
         tree_id = 6
 
@@ -191,7 +192,7 @@ def get_response_tree_7(tree_id, case, tag, prediction):
     if case == 1:
         response = (
             prediction
-            + " Eine Frage hätte ich noch: Hälst du Schauspielpatienten für eine gute Alternative zu echten Patienten?"
+            + " Eine Frage hätte ich noch: Hältst du Schauspielpatienten für eine gute Alternative zu echten Patienten?"
         )
         case = 0
         tree_id = 8
