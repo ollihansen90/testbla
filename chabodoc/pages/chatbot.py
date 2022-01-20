@@ -36,7 +36,7 @@ def download_punkt():
 @st.cache(suppress_st_warning=True)
 def load_data_from_json():
     # st.write("Loading data from json")
-    with open("intents.json") as file:
+    with open("../intents.json", encoding="utf-8") as file:
         data = json.load(file)
     return data
 
@@ -127,7 +127,7 @@ def app():
         dims = [507, 253, 14]
         st.session_state["chatbot_model_trained"] = Classifier(dims).to(device)
         st.session_state["chatbot_model_trained"].load_state_dict(
-            torch.load("chatbot_model_trained.pth")
+            torch.load("chabodoc/chatbot_model_trained.pth")
         )
 
     st.session_state["chatbot_model_trained"].eval()
@@ -135,7 +135,7 @@ def app():
     if "conversation" not in st.session_state:
         st.session_state["conversation"] = []
         st.session_state["conversation"].append(
-            "Melinda: Hi, ich bin Melinda! Ich freue mich, dass wir hier chatten können und würde dir gerne ein paar Fragen stellen. Wie geht es dir gerade?"
+            "Melinda: Hi, ich bin Melinda! Ich freue mich, dass wir hier chatten können, und würde dir gerne ein paar Fragen stellen. Wie geht es dir gerade?"
         )
         st.session_state["tag"] = []
         st.session_state["tag"].append(" ")
