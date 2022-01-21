@@ -243,10 +243,12 @@ Um mit Melinda chatten zu können, muss der Antworttext in das **Textfeld** eing
                 st.markdown(markdown_string, unsafe_allow_html=True)
 
     with st.expander("Details zu aktueller Antwort von Melinda"):
-        for i in range(len(sicherheiten)):
+        tabelle = {"Label": tags, "Sicherheit": [str(i.item()) for i in sicherheiten]}
+        st.table(tabelle)
+        """for i in range(len(sicherheiten)):
             line = tags[i] + ": " + str(sicherheiten[i].item())
             st.markdown(line)
-        """tag_string = "Tag: " + str(st.session_state["tag"][-1])
+        tag_string = "Tag: " + str(st.session_state["tag"][-1])
         st.markdown(tag_string)
         sicher_string = "Sicherheit: " + str(st.session_state["sicher"][-1])
         st.markdown(sicher_string)"""
