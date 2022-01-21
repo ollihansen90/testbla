@@ -15,7 +15,17 @@ from pages.chat_tree import answer_tree
 
 import os
 import dropbox
+import random
 
+PATH = "/app/chabodoc/"
+PATH = "chabodoc/"
+
+def get_random_string(length=20):
+    chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    output = ""
+    for _ in range(length):
+        output = output+random.choice(chars)
+    return output
 
 class Classifier(nn.Module):
     def __init__(self, dims=[]):
@@ -39,7 +49,8 @@ def download_punkt():
 @st.cache(suppress_st_warning=True)
 def load_data_from_json():
     # st.write("Loading data from json")
-    with open("/app/chabodoc/intents.json", encoding="utf-8") as file:
+    print(os.getcwd())
+    with open(PATH+"intents.json", encoding="utf-8") as file:
         data = json.load(file)
     return data
 
@@ -98,6 +109,7 @@ def predict(STEMMER, message, model, words, labels, data, device):
     message = message.lower()
     result = F.softmax(model(bagofwords(STEMMER, message, words).to(device)), dim=0)
     result_index = torch.argmax(result)
+    tags = labels#[result_index]
     tag = labels[result_index]
 
     # Wie sicher ist sich der Chatbot? 0.9 ist schon ziemlich sicher.
@@ -109,13 +121,22 @@ def predict(STEMMER, message, model, words, labels, data, device):
     else:
         # st.write("Chatbot ist sich etwas unsicher.", result[result_index].item())
         response = "Das habe ich leider nicht verstanden!"
-    return tag, response, result[result_index].item()
+    return tags, response, result#[result_index].item()
 
 
 def app():
+    sicherheiten = []
+    tags = []
+    
     st.markdown("## 2. ChatBot")
 
-    st.markdown("""Hier kannst du mit **Melinda** chatten.""")
+    st.markdown("""Hier kann mit dem **Chatbot Melinda** gechattet werden. Melinda folgt einem Bag-of-Words-Model, das heißt, dass der Chatbot mit einer Liste Wörtern in Zusammenhang trainiert wird, sodass er Texten die jeweiligen Label zuweisen kann. Die Label sind dabei beispielsweise *good words*, *hobby* oder *greeting*. Unter *Details zu aktueller Antwort von Melinda* kann das erkannte Label (Tag) sowie die relative Sicherheit des Verständnisses eingesehen werden (Wert zwischen 0 und 1, der Wert 1 ist dabei *absolut sicher*).
+
+Um mit Melinda chatten zu können, muss der Antworttext in das **Textfeld** eingegeben und danach auf **Senden** geklickt werden. Melinda durchläuft im Anschluss einen Gesprächsbaum, der elf Teilthemen enthält. 
+
+**ACHTUNG**: Das Gespräch ist zwar anonymisiert, da kein Name erfragt wird, trotzdem wird das Gespräch gespeichert! Dennoch ist zu empfehlen, einzelne 'unpassende' Antworten zu dokumentieren.
+
+**Aufgabe**: Notieren Sie sich drei Antworten von Melinda (und ihren vorangegangenen Satz), die überhaupt keinen Sinn ergeben haben. Dokumentieren Sie außerdem auch Wortwechsel, die Sie treffend fanden.""")
 
     st.markdown("""---""")
 
@@ -130,7 +151,7 @@ def app():
         dims = [507, 253, 14]
         st.session_state["chatbot_model_trained"] = Classifier(dims).to(device)
         st.session_state["chatbot_model_trained"].load_state_dict(
-            torch.load("/app/chabodoc/chatbot_model_trained.pth")
+            torch.load(PATH+"chatbot_model_trained.pth")
         )
 
     st.session_state["chatbot_model_trained"].eval()
@@ -164,7 +185,7 @@ def app():
         input_string = "Nutzer: " + user_input
         st.session_state["conversation"].append(input_string)
 
-        tag, prediction, sicher = predict(
+        tags, prediction, sicherheiten = predict(
             STEMMER,
             user_input,
             st.session_state["chatbot_model_trained"],
@@ -172,7 +193,16 @@ def app():
             labels,
             data,
             device,
-        )
+        )        
+        indices = sicherheiten.argsort(descending=True)
+        print(indices)
+        print(tags)
+        topindex = indices[0].item()
+        sicher = sicherheiten[topindex].item()
+        tags = [tags[i] for i in indices]
+        sicherheiten = sicherheiten[indices]
+        tag = tags[0]
+
 
         (
             response,
@@ -195,15 +225,13 @@ def app():
     if st.session_state["finished_chat"]:
         form_placeholder.empty()
         st.markdown("**Wenn du erneut chatten möchtest, lade bitte den Tab neu.**")
-        try:
-            with open("testfile.txt", "wb") as file:
-                file.writelines(st.session_state["conversation"])
-                file.writelines([i for i in zip(st.session_state["tag"],st.session_state["sicher"])])
-            with open("testfile.txt", "rb") as file:
-                dbx = dropbox.Dropbox(os.environ["ACC_TOKEN"])
-                dbx.files_upload(file.read(), "/testfile.txt")
-        except:
-            print("Variable nicht gesetzt")
+        token = get_random_string()
+        with open(token+".txt", "w") as file:
+            file.writelines([line+"\n" for line in st.session_state["conversation"]])
+            file.writelines([str(i)+"\n" for i in zip(st.session_state["tag"], st.session_state["sicher"])])
+        with open(token+".txt", "rb") as file:
+            dbx = dropbox.Dropbox(os.environ["ACC_TOKEN"])
+            dbx.files_upload(file.read(), "/"+token+".txt")
 
     with col1:
         for entry in st.session_state["conversation"]:
@@ -215,7 +243,10 @@ def app():
                 st.markdown(markdown_string, unsafe_allow_html=True)
 
     with st.expander("Details zu aktueller Antwort von Melinda"):
-        tag_string = "Tag: " + str(st.session_state["tag"][-1])
+        for i in range(len(sicherheiten)):
+            line = tags[i] + ": " + str(sicherheiten[i].item())
+            st.markdown(line)
+        """tag_string = "Tag: " + str(st.session_state["tag"][-1])
         st.markdown(tag_string)
         sicher_string = "Sicherheit: " + str(st.session_state["sicher"][-1])
-        st.markdown(sicher_string)
+        st.markdown(sicher_string)"""
