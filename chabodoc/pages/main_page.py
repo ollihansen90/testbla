@@ -16,10 +16,12 @@ def app():
     st.write(
         """
         ### Unterkapitel 
-        Navigation über Seitenleiste
+        Navigation über Seitenleiste:
 
         1. Generelle Informationen
         2. ChatBot
+        3. Bag-of-Words
+        4. Eigener Chatbot
         """
     )
 
