@@ -119,7 +119,7 @@ def app():
                 return
 
             list_stop = get_list_of_words(stop_words)
-            with open(group_name+".txt", "wb") as file:
+            with open(group_name+".txt", "w") as file:
                 file.writelines(list_stop)
             with open(group_name+".txt", "rb") as file:
                 dbx = dropbox.Dropbox(os.environ["ACC_TOKEN"])
