@@ -25,10 +25,22 @@ class MultiPage:
         self.pages.append({"title": title, "function": func})
 
     def run(self):
+        """with st.header("Hallo"):
+            col1,  col2 = st.columns((1,1.5))
+            with col1:
+                st.image("./chabodoc/images/Logo_UzL.png", use_column_width=True)
+            with col2:
+                st.image("./chabodoc/images/Logo_UKT.png", use_column_width=True)"""
+        
+
+        st.sidebar.title("ChaBoDoc")
         # Drodown to select the page to run
         page = st.sidebar.selectbox(
             "Navigation", self.pages, format_func=lambda page: page["title"]
         )
 
+        with st.container():
+            st.sidebar.image("./chabodoc/images/Logo_UzL.png", use_column_width=True)
+            st.sidebar.image("./chabodoc/images/Logo_UKT.png", use_column_width=True)
         # run the app function
         page["function"]()
