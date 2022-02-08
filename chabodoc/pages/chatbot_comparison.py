@@ -14,7 +14,7 @@ import pandas as pd
 #from utils import Classifier
 #import matplotlib
 
-PATHDATA = "./data/"
+PATHDATA = "./chabodoc/data/"
 PATHSTOP = PATHDATA+"stopwords/"
 PATHWORDS = PATHDATA+"words/"
 PATHNET = PATHDATA+"networks/"
