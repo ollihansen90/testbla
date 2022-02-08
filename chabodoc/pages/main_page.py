@@ -22,6 +22,7 @@ def app():
         2. ChatBot
         3. Bag-of-Words
         4. Eigener Chatbot
+        5. Vortrainierte Gruppenchatbots
         """
     )
 
